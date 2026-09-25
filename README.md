@@ -178,13 +178,19 @@ Full measure list, 21 measures and columns: [`Docs/MealDash_DAX_Measures.pdf`](D
 
 ## Dashboard
 
-3-page Power BI dashboard on the same semantic model as the SQL layer:
+A 3-page Power BI dashboard on the same semantic model as the SQL layer, built for self-serve exploration, not just static reporting.
 
-- **Page 1, Executive Overview:** total orders, avg delivery time, festival impact %, slow-delivery rate
-- **Page 2, Delivery Drivers Deep Dive:** distance, rating, vehicle condition, bundling, all slicer-driven
-- **Page 3, Trend Over Time:** daily averages smoothed with a 7-day rolling average
+**Page 1, Executive Overview.** Total orders, avg delivery time, festival impact %, and slow-delivery rate at a glance.
 
 ![Executive Overview](Screenshots/Overview.png)
+
+**Page 2, Delivery Drivers Deep Dive.** Distance, agent rating, vehicle condition, and order bundling, all slicer-driven so a viewer can isolate any single driver.
+
+![Delivery Drivers Deep Dive](Screenshots/DeepDive.png)
+
+**Page 3, Trend Over Time.** Daily averages smoothed with a 7-day rolling average to separate real signal from day-to-day noise, confirming the patterns above are structural, not seasonal drift.
+
+![Trend Over Time](Screenshots/TrendOverTime.png)
 
 🔗 [Open the Live Interactive Dashboard](https://app.fabric.microsoft.com/links/SJ5wVO19En?ctid=e93d71d6-b5c0-4b78-a861-d9964ecdfcd6&pbi_source=linkShare&bookmarkGuid=c964f109-a243-4282-9765-edfe9330625c) *(Microsoft sign-in required; static export also available: [Mealdash_Dashboard.pdf](Dashboard/Mealdash_Dashboard.pdf))*
 
@@ -213,3 +219,5 @@ Full measure list, 21 measures and columns: [`Docs/MealDash_DAX_Measures.pdf`](D
 
 **Seema Kumari**, Data Analyst
 📧 [seemakri136@gmail.com](mailto:seemakri136@gmail.com) · 🔗 [LinkedIn](https://linkedin.com/in/seema-kumari-375763308) · 📊 [Live Dashboard](https://app.fabric.microsoft.com/links/SJ5wVO19En?ctid=e93d71d6-b5c0-4b78-a861-d9964ecdfcd6&pbi_source=linkShare&bookmarkGuid=c964f109-a243-4282-9765-edfe9330625c)
+
+*Open to opportunities, collaborations, and conversations around data analytics.*
