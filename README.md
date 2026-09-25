@@ -221,3 +221,5 @@ A 3-page Power BI dashboard on the same semantic model as the SQL layer, built f
 📧 [seemakri136@gmail.com](mailto:seemakri136@gmail.com) · 🔗 [LinkedIn](https://linkedin.com/in/seema-kumari-375763308) · 📊 [Live Dashboard](https://app.fabric.microsoft.com/links/SJ5wVO19En?ctid=e93d71d6-b5c0-4b78-a861-d9964ecdfcd6&pbi_source=linkShare&bookmarkGuid=c964f109-a243-4282-9765-edfe9330625c)
 
 *Open to opportunities, collaborations, and conversations around data analytics.*
+
+## ⭐ If you found this project useful
