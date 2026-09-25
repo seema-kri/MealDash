@@ -1,185 +1,144 @@
 # 🍔 MealDash — Delivery Operations Analytics
 
-**Diagnosing why delivery times vary across a 45,000+ order quick-commerce dataset, and turning it into three specific, actionable recommendations, using Excel, SQL, Microsoft Fabric, and Power BI.**
-
-[![Live Dashboard](https://img.shields.io/badge/Power_BI-Live_Dashboard-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)](https://app.fabric.microsoft.com/links/SJ5wVO19En?ctid=e93d71d6-b5c0-4b78-a861-d9964ecdfcd6&pbi_source=linkShare&bookmarkGuid=c964f109-a243-4282-9765-edfe9330625c)
-![Excel](https://img.shields.io/badge/Excel-Power_Query-217346?style=for-the-badge&logo=microsoftexcel&logoColor=white)
-![SQL](https://img.shields.io/badge/SQL-T--SQL-4479A1?style=for-the-badge&logo=postgresql&logoColor=white)
-![Microsoft Fabric](https://img.shields.io/badge/Microsoft_Fabric-Lakehouse-742774?style=for-the-badge&logo=microsoftazure&logoColor=white)
-
-🔗 **[Open the Live Interactive Dashboard](https://app.fabric.microsoft.com/links/SJ5wVO19En?ctid=e93d71d6-b5c0-4b78-a861-d9964ecdfcd6&pbi_source=linkShare&bookmarkGuid=c964f109-a243-4282-9765-edfe9330625c)**
+**Diagnosing why delivery times vary across a 45,000+ order quick-commerce dataset using Excel, SQL, Microsoft Fabric, and Power BI — turning the findings into three specific, actionable recommendations.**
 
 ---
 
-## 📑 Table of Contents
-
-- [Business Problem](#-business-problem)
-- [Dataset](#-dataset)
-- [Tools & Technologies](#️-tools--technologies)
-- [Project Structure](#-project-structure)
-- [Approach](#-approach)
-- [Key Insights](#-key-insights)
-- [Dashboard Preview](#-dashboard-preview)
-- [Recommendations](#-recommendations)
-- [How to Run This Project](#️-how-to-run-this-project)
-- [Future Work](#-future-work)
-- [Connect](#-connect)
+## Table of Contents
+- [Overview](#overview)
+- [Problem Statement](#problem-statement)
+- [Dataset Description](#dataset-description)
+- [Tools & Technologies](#tools--technologies)
+- [Project Structure](#project-structure)
+- [Data Cleaning & Preparation](#data-cleaning--preparation)
+- [EDA & Key Insights](#eda--key-insights)
+- [Dashboard](#dashboard)
+- [How to Run This Project](#how-to-run-this-project)
+- [Final Recommendations & Future Work](#final-recommendations--future-work)
+- [Author & Contact](#author--contact)
 
 ---
 
-## 🎯 Business Problem
+## Overview
 
-MealDash's delivery times vary widely. Some orders arrive in 10 minutes, others take almost an hour, and there was no quick, repeatable way to know why. Diagnosing a slow week meant manually digging through raw data for a day or two, with no standing answer to "why was it slow?"
+MealDash is a quick-commerce delivery operations analysis built on a real, ~45,000-order dataset. It follows a full analytics pipeline — Excel for cleaning, SQL for answering 10 defined business questions, Microsoft Fabric for a governed data pipeline, and Power BI for a 3-page live dashboard — and ends in three specific, ops-actionable recommendations rather than open-ended observations.
 
-This project answers 10 specific business questions (full scope in the [Business Requirements Document](Docs/MealDash_BRD.pdf)), moving from the overall scale of the problem, to the levers ops can control (traffic, distance, staffing, order bundling) versus the ones they can't (weather), and finally to whether performance is trending better or worse over time. The result is a governed, repeatable pipeline that answers the same questions in minutes instead of days.
+## Problem Statement
 
-## 📦 Dataset
+Delivery times at MealDash vary widely: some orders arrive in 10 minutes, others take almost an hour, with no quick, repeatable way to know why. Diagnosing a single slow week meant manually digging through raw data for a day or two. This project builds a repeatable pipeline that answers "why was it slow, and what can we do about it?" in minutes instead of days.
 
-A real, public delivery-operations dataset of approximately 45,000 orders, including delivery timestamps, GPS coordinates, weather conditions, traffic density, delivery agent ratings, vehicle type, and festival-day flags. No synthetic data was used. Every finding is grounded in real, messy, imperfect data that was cleaned and validated before any conclusion was drawn.
+## Dataset Description
 
-📥 **Source:** [Zomato Delivery Operations Analytics Dataset — Kaggle](https://www.kaggle.com/datasets/saurabhbadole/zomato-delivery-operations-analytics-dataset)
-
-## 🛠️ Tools & Technologies
-
-| Tool | Role in This Project |
+| Detail | Value |
 |---|---|
-| **Excel (Power Query)** | First cleaning pass: nulls, formats, categorical standardization, and a Haversine-based `Distance_km` column |
-| **SQL** (Fabric SQL Analytics Endpoint) | Answered all 10 business questions using CTEs, CASE-based bucketing, and window functions (`PERCENTILE_CONT`, rolling averages) |
-| **Microsoft Fabric** (Lakehouse + Dataflow Gen2) | Built a repeatable, governed pipeline that pulls cleaned data from GitHub via Dataflow Gen2 into a Lakehouse, instead of a one-off manual upload |
-| **Power BI** | 3-page live, interactive dashboard with DAX measures, built on the same governed semantic model as the SQL layer |
+| Records | ~45,000 delivery orders |
+| Fields | Delivery timestamps, GPS coordinates, weather, traffic density, agent ratings, vehicle type, festival-day flag |
+| Source | [Zomato Delivery Operations Analytics Dataset — Kaggle](https://www.kaggle.com/datasets/saurabhbadole/zomato-delivery-operations-analytics-dataset) |
+| Type | Real-world, no synthetic data |
 
-## 📂 Project Structure
+Raw and cleaned versions are in [`Data/`](Data/).
+
+## Tools & Technologies
+
+| Tool | Role |
+|---|---|
+| **Excel (Power Query)** | First cleaning pass — nulls, formats, categorical standardization, Haversine-based `Distance_km` column |
+| **SQL** (Fabric SQL Analytics Endpoint) | Answered all 10 business questions — CTEs, CASE-based bucketing, window functions (`PERCENTILE_CONT`, rolling averages) |
+| **Microsoft Fabric** (Lakehouse + Dataflow Gen2) | Governed, repeatable pipeline pulling cleaned data from GitHub into a Lakehouse |
+| **Power BI** | 3-page live dashboard with DAX measures, built on the same semantic model as the SQL layer |
+| **Git / GitHub** | Version control and project hosting |
+
+## Project Structure
 
 ```
 MealDash/
 ├── Dashboard/
-│   ├── Mealdash_Dashboard.pbit
 │   ├── Mealdash_Dashboard.pbix
-│   ├── Mealdash_Dashboard.pdf
-│   └── README.md
+│   ├── Mealdash_Dashboard.pbit
+│   └── Mealdash_Dashboard.pdf
 ├── Data/
-│   ├── Clean/
-│   │   ├── MealDash_Clean.csv
-│   │   └── README.md
-│   ├── Raw/
-│   │   ├── Raw_Data.csv
-│   │   └── README.md
-│   └── README.md
+│   ├── Clean/MealDash_Clean.csv
+│   └── Raw/Raw_Data.csv
 ├── Docs/
 │   ├── MealDash_BRD.pdf
-│   ├── SQL_Report.pdf
-│   └── README.md
+│   ├── MealDash_DAX_Measures.pdf
+│   ├── MealDash_Presentation.pdf/.pptx
+│   └── SQL_Report.pdf
 ├── Excel_Analysis/
-│   ├── Charts.png
 │   ├── MealDash_Excel_Analysis.xlsx
-│   ├── Pivot.png
-│   └── README.md
+│   └── Charts.png, Pivot.png
 ├── SQL/
-│   ├── MyQueries.zip
-│   └── README.md
+│   └── Q1_...sql – Q10_...sql
 ├── Screenshots/
-│   ├── Overview.png
-│   ├── DeepDive.png
-│   ├── TrendOverTime.png
-│   ├── Fabric.png
-│   ├── FabricMealDash.png
-│   ├── DataFlow Gen2.png
-│   ├── Charts.png
-│   ├── Pivot.png
-│   └── README.md
+│   └── Overview.png, DeepDive.png, TrendOverTime.png, Fabric.png
 ├── LICENSE
 └── README.md
 ```
 
-## 🔍 Approach
+## Data Cleaning & Preparation
 
-1. Cleaned raw delivery data in Excel Power Query: handled nulls, fixed inconsistent formats, standardized categories, and calculated straight-line delivery distance from GPS coordinates using the Haversine formula.
-2. Version-controlled the cleaned dataset on GitHub, so the pipeline pulls from a refreshable source rather than a static one-time upload.
-3. Loaded the data into a Microsoft Fabric Lakehouse via Dataflow Gen2, keeping the pipeline repeatable and governed.
-4. Answered all 10 business questions in SQL against the Fabric SQL Analytics Endpoint. Every average is reported alongside its sample size, so no finding is trusted blindly. Full reasoning for each query is documented in the [SQL Findings Report](Docs/SQL_Report.pdf).
-5. Built a 3-page live Power BI dashboard on the same semantic model, so the visuals and the SQL findings are always consistent with each other.
+- Handled nulls and inconsistent formats in Excel Power Query
+- Standardized categorical fields (city type, weather, traffic density)
+- Calculated straight-line delivery distance (`Distance_km`) from GPS coordinates using the Haversine formula
+- Version-controlled the cleaned dataset on GitHub as a refreshable source, then loaded it into a Fabric Lakehouse via Dataflow Gen2 rather than relying on a one-time manual upload
 
-## 💡 Key Insights
+## EDA & Key Insights
+
+10 business questions were answered in SQL, each reported alongside its sample size so no finding is trusted blindly. Full reasoning: [SQL Findings Report](Docs/SQL_Report.pdf).
 
 | # | Question | Finding |
 |---|---|---|
-| 1 | Overall delivery time | 26 min average, 10 to 54 min range |
+| 1 | Overall delivery time | 26 min average, 10–54 min range |
 | 2 | Slowest city | Metropolitan slowest by volume (27 min, 34,000+ orders) |
-| 3 | Traffic impact | Jam adds about 10 min vs. Low traffic |
+| 3 | Traffic impact | Jam adds ~10 min vs. Low traffic |
 | 4 | Weather impact | Fog and Cloudy slowest (28 min), not storms as expected |
 | 5 | Distance impact | Biggest time cost is crossing the 5 km mark, then plateaus |
-| 6 | Vehicle type impact | Minor effect (about 3 min) |
-| 7 | Agent rating impact | **4.5+ rated agents are 10 to 13 min faster** |
-| 8 | Bundled orders impact | **2 to 3 bundled orders more than doubles delivery time** |
-| 9 | Festival impact | **Festival days are 75 to 80% slower** than normal days |
+| 6 | Vehicle type impact | Minor effect (~3 min) |
+| 7 | Agent rating impact | **4.5+ rated agents are 10–13 min faster** |
+| 8 | Bundled orders impact | **2–3 bundled orders more than doubles delivery time** |
+| 9 | Festival impact | **Festival days are 75–80% slower** than normal days |
 | 10 | Trend over time | Flat, no long-term drift; patterns are structural |
 
-📄 Full reasoning, SQL code, and confidence levels for every finding: **[SQL Findings Report](Docs/SQL_Report.pdf)**
+## Dashboard
 
-## 📊 Dashboard Preview
+A 3-page Power BI dashboard, built on the same semantic model as the SQL layer, with DAX measures documented in [`Docs/MealDash_DAX_Measures.pdf`](Docs/MealDash_DAX_Measures.pdf):
 
-**Page 1: Executive Overview**
-![Overview](Screenshots/Overview.png)
+- **Page 1 — Executive Overview:** total orders, avg delivery time, festival impact %, slow-delivery rate
+- **Page 2 — Delivery Drivers Deep Dive:** distance, rating, vehicle condition, bundling — all slicer-driven
+- **Page 3 — Trend Over Time:** daily averages smoothed with a 7-day rolling average
 
-**Page 2: Delivery Drivers Deep Dive**
-![Deep Dive](Screenshots/DeepDive.png)
+![Executive Overview](Screenshots/Overview.png)
 
-**Page 3: Trend Over Time**
-![Trend](Screenshots/TrendOverTime.png)
+🔗 **[Open the Live Interactive Dashboard](https://app.fabric.microsoft.com/links/SJ5wVO19En?ctid=e93d71d6-b5c0-4b78-a861-d9964ecdfcd6&pbi_source=linkShare&bookmarkGuid=c964f109-a243-4282-9765-edfe9330625c)**
+*(Microsoft sign-in required — static export also available: [Mealdash_Dashboard.pdf](Dashboard/Mealdash_Dashboard.pdf))*
 
-🔗 **[Open the live, interactive dashboard](https://app.fabric.microsoft.com/links/SJ5wVO19En?ctid=e93d71d6-b5c0-4b78-a861-d9964ecdfcd6&pbi_source=linkShare&bookmarkGuid=c964f109-a243-4282-9765-edfe9330625c)**
+## How to Run This Project
 
-## ✅ Recommendations
-
-Three findings stand out as the largest, most actionable, and least ambiguous. These are the ones I'd act on first if I had five minutes with the operations team.
-
-### 1. 🎯 Pre-plan festival-day staffing
-Festival-day deliveries take 75 to 80% longer than normal days, the single largest effect found across all 10 questions, based on 45,000+ orders. Low order volume (896 orders) but high delay impact makes this a high-ROI, low-effort fix: targeted staffing on known festival dates, not a company-wide change.
-
-### 2. 📦 Cap bundled deliveries at 1 extra order
-Handling 2 to 3 orders in one trip more than doubles delivery time (22 min to 47 min), and the cost accelerates non-linearly: the jump from 1 to 2 bundled orders is worse than 0 to 1. Capping bundling at 1 extra order for time-sensitive deliveries captures most of the efficiency without the steep time penalty.
-
-### 3. ⭐ Use agent ratings for order routing
-Agents rated 4.5+ deliver in 24 minutes on average, while every lower-rated bucket sits at 34 to 37 minutes, a 10+ minute gap that holds regardless of how far below 4.5 the rating is. Rating is a strong, easy-to-access signal for prioritizing time-sensitive orders, even though causation (does rating drive speed, or does speed drive rating?) isn't fully resolved by this data alone.
-
-> Traffic and weather matter too, but they're conditions ops can't directly control. These three are things ops can act on this week.
-
-## ▶️ How to Run This Project
-
-1. **Clone this repository**
+1. **Clone the repository**
    ```bash
    git clone https://github.com/seema-kri/MealDash.git
    ```
-2. **Explore the data**: raw and cleaned CSVs are in [`Data/`](Data/) (original source: [Kaggle dataset](https://www.kaggle.com/datasets/saurabhbadole/zomato-delivery-operations-analytics-dataset))
-3. **Run the SQL queries**: all 10 business-question queries are in [`SQL/MyQueries.zip`](SQL/MyQueries.zip). Run against any SQL engine (originally built for Fabric's SQL Analytics Endpoint, works on standard T-SQL/PostgreSQL with minor syntax adjustments)
-4. **Open the dashboard**
-   - View instantly via the [live link](https://app.fabric.microsoft.com/links/SJ5wVO19En?ctid=e93d71d6-b5c0-4b78-a861-d9964ecdfcd6&pbi_source=linkShare&bookmarkGuid=c964f109-a243-4282-9765-edfe9330625c), or
-   - Open [`Dashboard/Mealdash_Dashboard.pbix`](Dashboard/Mealdash_Dashboard.pbix) in Power BI Desktop
-5. **Read the full reasoning**: [BRD](Docs/MealDash_BRD.pdf) for project scope, [SQL Findings Report](Docs/SQL_Report.pdf) for query-by-query analysis and recommendations
+2. **Explore the data** in [`Data/`](Data/) (raw and cleaned CSVs)
+3. **Run the SQL queries** in [`SQL/`](SQL/) — one file per business question, built for Fabric's SQL Analytics Endpoint, works on standard T-SQL/PostgreSQL with minor syntax adjustments
+4. **Open the dashboard** via the [live link](https://app.fabric.microsoft.com/links/SJ5wVO19En?ctid=e93d71d6-b5c0-4b78-a861-d9964ecdfcd6&pbi_source=linkShare&bookmarkGuid=c964f109-a243-4282-9765-edfe9330625c) or `Dashboard/Mealdash_Dashboard.pbix` in Power BI Desktop
+5. **Read the full reasoning** in [`Docs/`](Docs/) — BRD, SQL Findings Report, DAX Measures reference
 
-## 🚀 Future Work
+## Final Recommendations & Future Work
 
-- Validate the festival-day effect against a full year of festival dates, not just this dataset's window
-- Replace straight-line (Haversine) distance with actual road-route distance for more precise distance analysis
+**Recommendations**
+1. **Pre-plan festival-day staffing** — festival deliveries take 75–80% longer, the single largest effect found; low volume (896 orders) makes this a high-ROI, low-effort fix
+2. **Cap bundled deliveries at 1 extra order** — 2–3 bundled orders more than doubles delivery time (22→47 min), and the cost accelerates non-linearly
+3. **Use agent ratings for order routing** — 4.5+ rated agents deliver 10+ minutes faster than every lower bucket, a strong routing signal
+
+**Future Work**
+- Validate the festival-day effect against a full year of festival dates
+- Replace straight-line (Haversine) distance with actual road-route distance
 - Investigate the direction of causation between agent rating and delivery speed
-- Add a live or real-time data connection instead of a static historical dataset, to support ongoing monitoring rather than one-time diagnosis
+- Add a live data connection for ongoing monitoring, not one-time diagnosis
 
----
+## Author & Contact
 
-## 📫 Connect
-
-<p align="center">
-  <a href="https://linkedin.com/in/seema-kumari-375763308">
-    <img src="https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" />
-  </a>
-  <a href="mailto:seemakri136@gmail.com">
-    <img src="https://img.shields.io/badge/Email-Contact-EA4335?style=for-the-badge&logo=gmail&logoColor=white" />
-  </a>
-  <a href="https://app.fabric.microsoft.com/links/SJ5wVO19En?ctid=e93d71d6-b5c0-4b78-a861-d9964ecdfcd6&pbi_source=linkShare&bookmarkGuid=c964f109-a243-4282-9765-edfe9330625c">
-    <img src="https://img.shields.io/badge/Portfolio-Live_Dashboard-F2C811?style=for-the-badge&logo=powerbi&logoColor=black" />
-  </a>
-</p>
-
-<p align="center">
-  <em>Open to opportunities, collaborations, and conversations around data analytics.</em>
-</p>
+**Seema Kumari** — Data Analyst
+📧 [seemakri136@gmail.com](mailto:seemakri136@gmail.com)
+🔗 [LinkedIn](https://linkedin.com/in/seema-kumari-375763308)
+📊 [Live Dashboard](https://app.fabric.microsoft.com/links/SJ5wVO19En?ctid=e93d71d6-b5c0-4b78-a861-d9964ecdfcd6&pbi_source=linkShare&bookmarkGuid=c964f109-a243-4282-9765-edfe9330625c)
