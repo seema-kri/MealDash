@@ -77,7 +77,7 @@ MealDash/
 ├── SQL/
 │   ├── MyQueries.zip
 │   └── README.md
-├── Screenshorts/
+├── Screenshots/
 │   ├── Overview.png
 │   ├── DeepDive.png
 │   ├── TrendOverTime.png
@@ -119,13 +119,13 @@ MealDash/
 ## 📊 Dashboard Preview
 
 **Page 1: Executive Overview**
-![Overview](Screenshorts/Overview.png)
+![Overview](Screenshots/Overview.png)
 
 **Page 2: Delivery Drivers Deep Dive**
-![Deep Dive](Screenshorts/DeepDive.png)
+![Deep Dive](Screenshots/DeepDive.png)
 
 **Page 3: Trend Over Time**
-![Trend](Screenshorts/TrendOverTime.png)
+![Trend](Screenshots/TrendOverTime.png)
 
 🔗 **[Open the live, interactive dashboard](https://app.fabric.microsoft.com/links/SJ5wVO19En?ctid=e93d71d6-b5c0-4b78-a861-d9964ecdfcd6&pbi_source=linkShare&bookmarkGuid=c964f109-a243-4282-9765-edfe9330625c)**
 
