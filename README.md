@@ -222,4 +222,4 @@ A 3-page Power BI dashboard on the same semantic model as the SQL layer, built f
 
 *Open to opportunities, collaborations, and conversations around data analytics.*
 
- ## ⭐ If this project was useful, a star on the repo is appreciated.
+If you found this project helpful, please consider giving it a ⭐ on GitHub — it helps a lot!
