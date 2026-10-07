@@ -4,6 +4,9 @@ Diagnosing why delivery times vary across 45,584 quick-commerce orders using Exc
 
 🔗 [Live Dashboard](https://app.fabric.microsoft.com/links/SJ5wVO19En?ctid=e93d71d6-b5c0-4b78-a861-d9964ecdfcd6&pbi_source=linkShare&bookmarkGuid=c964f109-a243-4282-9765-edfe9330625c) · 📄 [Business Requirements](Docs/MealDash_BRD.pdf) · 📽️ [Presentation](Docs/MealDash_Presentation.pdf) · 🧾 [SQL Findings Report](Docs/SQL_Report.pdf) · 📐 [DAX Reference](Docs/MealDash_DAX_Measures.pdf)
 
+![Executive Overview](Screenshots/Overview.png)
+
+
 ## Table of Contents
 
 - [Overview](#overview)
