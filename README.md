@@ -1,6 +1,6 @@
 # MealDash: Delivery Operations Analytics
 
-Diagnosing why delivery times vary across 45,584 quick-commerce orders using Excel, SQL, Microsoft Fabric and Power BI, and turning the findings into three actionable recommendations.
+Diagnosing why delivery times vary across 45,584 quick-commerce orders using Microsoft Fabric (Dataflow Gen2, Lakehouse, SQL), and Power BI, and turning the findings into three actionable recommendations.
 
 🔗 [Live Dashboard](https://app.fabric.microsoft.com/links/SJ5wVO19En?ctid=e93d71d6-b5c0-4b78-a861-d9964ecdfcd6&pbi_source=linkShare&bookmarkGuid=c964f109-a243-4282-9765-edfe9330625c) · 📄 [Business Requirements](Docs/MealDash_BRD.pdf) · 📽️ [Presentation](Docs/MealDash_Presentation.pdf) · 🧾 [SQL Findings Report](Docs/SQL_Report.pdf) · 📐 [DAX Reference](Docs/MealDash_DAX_Measures.pdf)
 
@@ -26,7 +26,7 @@ Diagnosing why delivery times vary across 45,584 quick-commerce orders using Exc
 
 ## Overview
 
-End-to-end delivery operations analysis. Excel Power Query cleans the data, GitHub versions it, a Fabric Dataflow Gen2 loads it into a Lakehouse, SQL answers 10 defined business questions, and a 3-page Power BI dashboard lets ops explore the results. The project ends in three recommendations ops can act on, not open-ended observations.
+End-to-end delivery operations analysis. The raw CSV is versioned on GitHub, and a Fabric Dataflow Gen2 pulls it from there, cleans it (nulls, formats, category standardization, Haversine `Distance_km`) and loads it into a Lakehouse. SQL answers 10 defined business questions, and a 3-page Power BI dashboard lets ops explore the results. The project ends in three recommendations ops can act on, not open-ended observations.
 
 ## Problem Statement
 
@@ -50,22 +50,22 @@ Note: the dataset has no promised delivery time field, so the slow-delivery rate
 
 | Tool | Role |
 |---|---|
-| **Excel (Power Query)** | Cleaning: nulls, formats, category standardization, Haversine `Distance_km` column |
+| **Git / GitHub** | Hosts and versions the raw CSV that feeds the pipeline |
+| **Microsoft Fabric Dataflow Gen2** (Power Query) | All cleaning and transformation: nulls, formats, category standardization, Haversine `Distance_km` column. Loads the result into the Lakehouse |
+| **Microsoft Fabric Lakehouse** | Stores the cleaned table `MealDash_Clean` |
 | **SQL** (Fabric SQL Analytics Endpoint) | 10 business questions using aggregation, CASE bucketing and a window function (7-day rolling average) |
-| **Microsoft Fabric** (Lakehouse, Dataflow Gen2) | Repeatable pipeline from GitHub into a Lakehouse |
 | **Power BI** | 3-page dashboard and DAX measures on a semantic model over the Lakehouse table |
-| **Git / GitHub** | Version control and hosting |
+| **Excel** | Light exploratory pivots and charts only (see [`Excel_Analysis/`](Excel_Analysis/)). Not used for cleaning |
 
 ## Architecture
 
 ```mermaid
 flowchart LR
-    A[Raw CSV<br/>Kaggle] --> B[Excel Power Query<br/>clean + Distance_km]
-    B --> C[GitHub<br/>versioned clean data]
-    C --> D[Fabric Dataflow Gen2]
-    D --> E[Fabric Lakehouse<br/>MealDash_Clean]
-    E --> F[SQL Analytics Endpoint<br/>10 questions]
-    E --> G[Semantic model + Power BI<br/>DAX measures]
+    A[Raw CSV<br/>Kaggle] --> B[GitHub<br/>versioned raw data]
+    B --> C[Fabric Dataflow Gen2<br/>clean + Distance_km]
+    C --> D[Fabric Lakehouse<br/>MealDash_Clean]
+    D --> E[SQL Analytics Endpoint<br/>10 questions]
+    D --> F[Semantic model + Power BI<br/>DAX measures]
 ```
 
 SQL and Power BI both read the same Lakehouse table, `MealDash_Clean`.
@@ -113,10 +113,13 @@ MealDash/
 
 ## Data Cleaning & Preparation
 
-- Handled nulls and inconsistent formats in Excel Power Query.
+All cleaning happens inside Fabric Dataflow Gen2 (Power Query), not in Excel. The raw CSV is read straight from GitHub, so a refresh re-runs every step.
+
+- Connected Dataflow Gen2 to the raw CSV hosted on GitHub.
+- Handled nulls and inconsistent formats.
 - Standardized categorical fields (city type, weather, traffic density).
 - Calculated straight-line delivery distance (`Distance_km`) from GPS coordinates with the Haversine formula.
-- Versioned the cleaned data on GitHub and loaded it into a Fabric Lakehouse through Dataflow Gen2, instead of a one-time manual upload.
+- Loaded the cleaned output into the Lakehouse table `MealDash_Clean`, instead of a one-time manual upload.
 
 ## EDA & Key Insights
 
@@ -242,8 +245,8 @@ Three pages on the same Lakehouse data as the SQL layer, built for self-serve ex
    git clone https://github.com/seema-kri/MealDash.git
    cd MealDash
    ```
-2. Explore the raw and cleaned CSVs in [`Data/`](Data/).
-3. Load `Data/Clean/MealDash_Clean.csv` into a Fabric Lakehouse as table `MealDash_Clean` (Dataflow Gen2 or direct upload).
+2. Explore the raw CSV in [`Data/Raw/`](Data/Raw/) and the cleaned output in [`Data/Clean/`](Data/Clean/).
+3. In a Fabric workspace, create a Lakehouse and a Dataflow Gen2. Point the dataflow at the raw CSV on GitHub (the `raw.githubusercontent.com` URL of `Data/Raw/Raw_Data.csv`), apply the cleaning steps described above, and load the result to the Lakehouse as table `MealDash_Clean`.
 4. Run the queries in [`SQL/`](SQL/) on the Lakehouse SQL Analytics Endpoint. They are T-SQL and may need small changes elsewhere.
 5. Open `Dashboard/Mealdash_Dashboard.pbix` in Power BI Desktop, or use the live link above.
 6. Read the reasoning in [`Docs/`](Docs/): BRD, SQL Findings Report, DAX reference.
